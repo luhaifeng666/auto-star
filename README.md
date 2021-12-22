@@ -1,9 +1,9 @@
-# auto-star
+# @cxs/auto-star
 
 ![nodeVersion](https://img.shields.io/badge/node-14.15.0%2B-green)
 
 ## 说明
-用于催学社自动star项目，项目地址维护在[这里](https://vika.cn/workbench/dst4inQ7sWdyUT3Xi9/viwWt7BNc5Hw3)~
+用于催~~卷~~学社自动star项目，项目地址维护在[这里](https://vika.cn/workbench/dst4inQ7sWdyUT3Xi9/viwWt7BNc5Hw3)~
 
 ## 使用方式
 1. fork一份代码
