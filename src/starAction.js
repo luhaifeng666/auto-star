@@ -1,6 +1,6 @@
-const { Octokit } = require("octokit");
+const { Octokit } = require("octokit")
 const { Vika } = require('@vikadata/vika')
-const core = require('@actions/core');
+const core = require('@actions/core')
 
 // 获取token
 const auth = core.getInput('token')
