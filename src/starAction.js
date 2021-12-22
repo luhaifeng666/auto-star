@@ -1,7 +1,7 @@
-import chalk from 'chalk'
-import { Octokit } from 'octokit'
-import { Vika } from '@vikadata/vika'
-import core from '@actions/core'
+const chalk = require('chalk')
+const { Octokit } = require("octokit");
+const { Vika } = require('@vikadata/vika')
+const core = require('@actions/core');
 
 // 获取token
 const auth = core.getInput('token')
