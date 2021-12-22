@@ -4,7 +4,6 @@
   "main": "index.js",
   "repository": "git@github.com:luhaifeng666/auto-star",
   "author": "luhaifeng <lhf222458@ncarzone.com>",
-  "type": "module",
   "scripts": {
     "ca": "git add -A && git-cz -av",
     "commit": "git-cz"
@@ -13,7 +12,6 @@
   "devDependencies": {
     "@actions/core": "^1.6.0",
     "@vikadata/vika": "^1.0.5",
-    "chalk": "^5.0.0",
     "commitizen": "^4.2.3",
     "cz-conventional-changelog": "^3.3.0",
     "husky": "^5.0.9",

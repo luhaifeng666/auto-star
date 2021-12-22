@@ -1,4 +1,3 @@
-const chalk = require('chalk')
 const { Octokit } = require("octokit");
 const { Vika } = require('@vikadata/vika')
 const core = require('@actions/core');
@@ -59,12 +58,12 @@ function starHandle (params) {
 			res.forEach(item => {
 				if (item.status === 'fulfilled') {
 					const info = getRepoInfo(item.value.url)
-					console.log(chalk.green(`https://github.com/${info.owner}/${info.repo} has been starred~`))
+					console.log(`https://github.com/${info.owner}/${info.repo} has been starred~`)
 				}
 			})
 		}
 	}).catch(err => {
-		console.log(chalk.red(err))
+		console.error(err)
 	})
 }
 
@@ -75,7 +74,7 @@ async function getRepos () {
 		if (response.success) {
 			data = initData(response.data)
 		} else {
-			console.log(chalk.red(`Get repos data error! The error message is : ${JSON.stringify(response)}`))
+			console.error(`Get repos data error! The error message is : ${JSON.stringify(response)}`)
 		}
 	})
 	return data
@@ -113,7 +112,7 @@ getRepos().then(repos => {
 					}, 1000 * 60)
 				}
 			} else {
-				console.log(chalk.red('Get starred repos failed!'))
+				console.error('Get starred repos failed!')
 			}
 		})
 	}
