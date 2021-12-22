@@ -53,7 +53,7 @@ function getRepoInfo (repoUrl) {
  * @param params
  */
 function starHandle (params) {
-	Promise.allSettled(params[0].map(param => octokit.rest.activity.starRepoForAuthenticatedUser(param))).then(res => {
+	params[0].length && Promise.allSettled(params[0].map(param => octokit.rest.activity.starRepoForAuthenticatedUser(param))).then(res => {
 		if (res) {
 			res.forEach(item => {
 				if (item.status === 'fulfilled') {
@@ -67,6 +67,34 @@ function starHandle (params) {
 	})
 }
 
+// 存储starred的repo
+const starredRepos = []
+
+/**
+ * 获取starred的repo
+ * @param currentPage
+ * @param cb
+ */
+function getStarredData (cb, currentPage = 1) {
+	// 获取已经start的repo列表
+	octokit.rest.activity.listReposStarredByAuthenticatedUser({ per_page: 100, page: currentPage }).then(res => {
+		if (res.status === 200) {
+			starredRepos.push(...res.data.map(item => item.html_url))
+			// 如果返回结果长度大于100，则继续请求
+			if (res.data.length >= 100) {
+				getStarredData(cb, currentPage + 1)
+			} else {
+				// 否则执行回调
+				cb()
+			}
+		} else {
+			console.error('Get starred repos failed!')
+		}
+	}).catch(err => {
+		console.error(`Get starred repos failed! The error message is: ${err}`)
+	})
+}
+
 // 获取repo记录
 async function getRepos () {
 	let data = null
@@ -74,8 +102,10 @@ async function getRepos () {
 		if (response.success) {
 			data = initData(response.data)
 		} else {
-			console.error(`Get repos data error! The error message is : ${JSON.stringify(response)}`)
+			console.error('Get repos data error! ')
 		}
+	}).catch(err => {
+		console.error(`Get repos data error! The error message is : ${JSON.stringify(response)}`)
 	})
 	return data
 }
@@ -83,39 +113,31 @@ async function getRepos () {
 // 获取所有的repo路径
 getRepos().then(repos => {
 	if (repos) {
-		// 获取已经start的repo列表
-		octokit.rest.activity.listReposStarredByAuthenticatedUser({ per_page: 100 }).then(res => {
-			if (res.status === 200) {
-				const starredRepos = res.data.map(item => item.html_url)
-				// 筛选尚未start的repo列表
-				const unStarredRepos = repos.filter(repo => !starredRepos.includes(repo))
-				// 获取参数列表
-				const paramsList = unStarredRepos.reduce((arr, req, index) => {
-					// 最大请求数为30个/次
-					if (!(index % 30)) {
-						arr.push([])
-					}
-					arr[arr.length - 1].push(getRepoInfo(req))
-					return arr
-				}, [])
-				// 开始star
-				starHandle(paramsList.splice(0, 1))
-				// 定时执行剩下没有star的repo
-				if (paramsList.length) {
-					const timer = setInterval(() => {
-						if (paramsList.length) {
-							starHandle(paramsList.splice(0, 1))
-						} else {
-							// 列表清空时，清空计时器
-							clearInterval(timer)
-						}
-					}, 1000 * 60)
+		getStarredData(() => {
+			// 筛选尚未start的repo列表
+			const unStarredRepos = repos.filter(repo => !starredRepos.includes(repo))
+			// 获取参数列表
+			const paramsList = unStarredRepos.reduce((arr, req, index) => {
+				// 最大请求数为30个/次
+				if (!(index % 30)) {
+					arr.push([])
 				}
-			} else {
-				console.error('Get starred repos failed!')
+				arr[arr.length - 1].push(getRepoInfo(req))
+				return arr
+			}, [])
+			// 开始star
+			starHandle(paramsList.splice(0, 1))
+			// 定时执行剩下没有star的repo
+			if (paramsList.length) {
+				const timer = setInterval(() => {
+					if (paramsList.length) {
+						starHandle(paramsList.splice(0, 1))
+					} else {
+						// 列表清空时，清空计时器
+						clearInterval(timer)
+					}
+				}, 1000 * 60)
 			}
-		}).catch(err => {
-			console.error(err)
 		})
 	}
 })

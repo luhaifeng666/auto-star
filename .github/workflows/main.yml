@@ -20,4 +20,4 @@ jobs:
         uses: ./
         with:
           token: ${{ secrets.TOKEN }}
-          vikaToken: 'uskzJtU25fMHIQVfOcq8ybl'
+          vikaToken: ${{ secrets.VIKA_TOKEN }}
