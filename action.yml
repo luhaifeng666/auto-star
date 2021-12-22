@@ -1,0 +1,12 @@
+name: 'GET TOKEN'
+description: 'Get secrets token'
+inputs:
+  token:  # secrets token
+    description: 'Get secrets token'
+    required: true
+  vikaToken:
+    description: 'Get vika token'
+    required: true
+runs:
+  using: 'node12'
+  main: 'utils/createIssues.js'

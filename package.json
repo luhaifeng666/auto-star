@@ -1,0 +1,23 @@
+{
+  "name": "@cxs/auto-star",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:luhaifeng666/auto-star",
+  "author": "luhaifeng <lhf222458@ncarzone.com>",
+  "type": "module",
+  "scripts": {
+    "ca": "git add -A && git-cz -av",
+    "commit": "git-cz"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@vikadata/vika": "^1.0.5",
+    "chalk": "^5.0.0",
+    "commitizen": "^4.2.3",
+    "cz-conventional-changelog": "^3.3.0",
+    "husky": "^5.0.9",
+    "jest": "^27.1.0",
+    "lint-staged": "^10.5.4",
+    "octokit": "^1.7.1"
+  }
+}
