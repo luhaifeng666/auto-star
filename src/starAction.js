@@ -114,6 +114,8 @@ getRepos().then(repos => {
 			} else {
 				console.error('Get starred repos failed!')
 			}
+		}).catch(err => {
+			console.error(err)
 		})
 	}
 })
