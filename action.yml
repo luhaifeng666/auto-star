@@ -9,4 +9,4 @@ inputs:
     required: true
 runs:
   using: 'node12'
-  main: 'utils/createIssues.js'
+  main: 'src/starAction.js'

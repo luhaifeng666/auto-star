@@ -11,6 +11,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@actions/core": "^1.6.0",
     "@vikadata/vika": "^1.0.5",
     "chalk": "^5.0.0",
     "commitizen": "^4.2.3",

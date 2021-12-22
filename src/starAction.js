@@ -1,12 +1,18 @@
 import chalk from 'chalk'
 import { Octokit } from 'octokit'
 import { Vika } from '@vikadata/vika'
+import core from '@actions/core'
+
+// 获取token
+const auth = core.getInput('token')
+// 获取vika token
+const token = core.getInput('vikaToken')
 
 // 初始化octokit
-const octokit = new Octokit({ auth: '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' })
+const octokit = new Octokit({ auth })
 
 // 初始化vika
-const vika = new Vika({ token: 'uskzJtU25fMHIQVfOcq8ybl', fieldKey: 'name' })
+const vika = new Vika({ token, fieldKey: 'name' })
 // 通过 datasheetId 来指定要从哪张维格表操作数据。
 const datasheet = vika.datasheet('dst4inQ7sWdyUT3Xi9')
 
