@@ -49,6 +49,36 @@ function getRepoInfo (repoUrl) {
 }
 
 /**
+ * 获取starred的repo
+ * @param currentPage
+ * @param cb
+ */
+// 存储starred的repo
+const starredRepos = []
+// 定义每页的数据量
+const PER_PAGE = 100
+
+function getStarredData (cb, currentPage = 1) {
+	// 获取已经start的repo列表
+	octokit.rest.activity.listReposStarredByAuthenticatedUser({ per_page: PER_PAGE, page: currentPage }).then(res => {
+		if (res.status === 200) {
+			starredRepos.push(...res.data.map(item => item.html_url))
+			// 如果返回结果长度为100，则继续请求
+			if (res.data.length === PER_PAGE) {
+				getStarredData(cb, currentPage + 1)
+			} else {
+				// 否则执行回调
+				cb()
+			}
+		} else {
+			console.error('Get starred repos failed!')
+		}
+	}).catch(err => {
+		console.error(`Get starred repos failed! The error message is: ${err}`)
+	})
+}
+
+/**
  * star操作
  * @param params
  */
@@ -67,34 +97,6 @@ function starHandle (params) {
 	})
 }
 
-// 存储starred的repo
-const starredRepos = []
-
-/**
- * 获取starred的repo
- * @param currentPage
- * @param cb
- */
-function getStarredData (cb, currentPage = 1) {
-	// 获取已经start的repo列表
-	octokit.rest.activity.listReposStarredByAuthenticatedUser({ per_page: 100, page: currentPage }).then(res => {
-		if (res.status === 200) {
-			starredRepos.push(...res.data.map(item => item.html_url))
-			// 如果返回结果长度大于100，则继续请求
-			if (res.data.length >= 100) {
-				getStarredData(cb, currentPage + 1)
-			} else {
-				// 否则执行回调
-				cb()
-			}
-		} else {
-			console.error('Get starred repos failed!')
-		}
-	}).catch(err => {
-		console.error(`Get starred repos failed! The error message is: ${err}`)
-	})
-}
-
 // 获取repo记录
 async function getRepos () {
 	let data = null
@@ -110,7 +112,6 @@ async function getRepos () {
 	return data
 }
 
-// 获取所有的repo路径
 getRepos().then(repos => {
 	if (repos) {
 		getStarredData(() => {
