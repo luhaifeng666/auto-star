@@ -1,0 +1,23 @@
+name: AUTO-STAR
+
+on:
+  push:
+    branches: [ master ]
+  schedule:
+    - cron: '0 01 * * *'
+jobs:
+  star:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup node version
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+      - name: Install packages
+        run: npm install
+      - name: Auto star
+        uses: ./
+        with:
+          token: ${{ secrets.TOKEN }}
+          vikaToken: 'uskzJtU25fMHIQVfOcq8ybl'
